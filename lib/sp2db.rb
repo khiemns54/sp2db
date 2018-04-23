@@ -35,7 +35,7 @@ module Sp2db
 
   # Default sheet
   def spreadsheet
-    client.spreadsheet Sp2db.config.sheet_id
+    client.spreadsheet Sp2db.config.spreadsheet_id
   end
 
   delegate :sp_to_csv,

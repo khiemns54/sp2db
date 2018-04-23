@@ -56,6 +56,11 @@ module Sp2db
         sp2db_config[:header_row]
       end
 
+      def sp2db_spreadsheet_id s=nil
+        sp2db_config[:spreadsheet_id] = s if s.present?
+        sp2db_config[:spreadsheet_id]
+      end
+
       [
         :data_transform,
         :process_data,

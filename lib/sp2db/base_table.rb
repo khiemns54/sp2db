@@ -6,7 +6,6 @@ module Sp2db
                   :worksheet,
                   :find_columns,
                   :spreadsheet_id,
-                  :spreadsheet,
                   :client
 
     def initialize opts={}
@@ -19,7 +18,7 @@ module Sp2db
         self.send "#{k}=", v
       end
 
-      self.sheet_name ||= opts[:sheet_name] = worksheet.try(:title)
+      self.sheet_name ||= opts[:sheet_name] = config[:sheet_name] || worksheet.try(:title)
     end
 
     def active_record?
@@ -29,6 +28,10 @@ module Sp2db
     # Table name
     def name
       @name ||= sheet_name.try(:to_sym) || raise("Name cannot be nil")
+    end
+
+    def spreadsheet_id
+      @spreadsheet_id ||= config[:spreadsheet_id] || Sp2db.config.spreadsheet_id
     end
 
     def name=n
@@ -48,11 +51,7 @@ module Sp2db
     end
 
     def spreadsheet
-      @spreadsheet = if spreadsheet_id.present?
-        client.spreadsheet spreadsheet_id
-      else
-        Sp2db.spreadsheet
-      end
+      client.spreadsheet spreadsheet_id
     end
 
     def sheet_name
