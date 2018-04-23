@@ -167,7 +167,7 @@ module Sp2db
     # Remove uncessary columns and invalid rows from csv format data
     def raw_filter raw_data, opts={}
       raw_header = raw_data[header_row].map.with_index do |h, idx|
-        p is_valid = valid_header?(h)
+        is_valid = valid_header?(h)
         {
           idx: idx,
           is_remove: !is_valid,
