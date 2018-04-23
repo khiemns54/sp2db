@@ -47,6 +47,10 @@ module Sp2db
       @import_strategy = ImportStrategy.strategy_by_name(strategy_name)
     end
 
+    def priority
+      @priority ||= config[:priority] || 0
+    end
+
     def to_db data, strategy: nil
       strategy = strategy.present? ? ImportStrategy.strategy_by_name : import_strategy
       strategy = strategy.new self, data
@@ -137,7 +141,7 @@ module Sp2db
       def all_tables
         all_models.map do |name, model|
           self.new name: name, model: model
-        end
+        end.sort_by(&:priority)
       end
 
       def sp_to_db *table_names

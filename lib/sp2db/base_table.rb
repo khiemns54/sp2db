@@ -44,11 +44,11 @@ module Sp2db
     end
 
     def client
-      @client ||= Sp2db.client
+      @client = Sp2db.client
     end
 
     def spreadsheet
-      @spreadsheet ||=  if spreadsheet_id.present?
+      @spreadsheet = if spreadsheet_id.present?
         client.spreadsheet spreadsheet_id
       else
         Sp2db.spreadsheet
@@ -60,10 +60,11 @@ module Sp2db
     end
 
     def worksheet
-      @worksheet ||= spreadsheet.worksheet_by_name(self.sheet_name.to_s)
+      @worksheet = spreadsheet.worksheet_by_name(self.sheet_name.to_s)
     end
 
     def sp_data
+      retries = 2
       raw_data = CSV.parse worksheet.export_as_string
       data = process_data raw_data, source: :sp
       data
@@ -146,7 +147,7 @@ module Sp2db
 
     # Header with "!" at the beginning or ending is required
     def require_header? h
-      h.present? && h.match("^!.*") || h.match(".*?!$")
+      h.present? && (h.match("^!.*") || h.match(".*?!$"))
     end
 
     # Convert number string to number
@@ -167,11 +168,12 @@ module Sp2db
     # Remove uncessary columns and invalid rows from csv format data
     def raw_filter raw_data, opts={}
       raw_header = raw_data[header_row].map.with_index do |h, idx|
+        p is_valid = valid_header?(h)
         {
           idx: idx,
-          is_remove: !valid_header?(h),
+          is_remove: !is_valid,
           is_required: require_header?(h),
-          name: h.gsub(/\s*/, '').gsub(/!/, '').downcase
+          name: is_valid && h.gsub(/\s*/, '').gsub(/!/, '').downcase
         }
       end
 

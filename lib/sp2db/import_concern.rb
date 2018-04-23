@@ -31,6 +31,11 @@ module Sp2db
         end
       end
 
+      def sp2db_priority pr=nil
+        sp2db_config[:priority] = pr if pr.present?
+        sp2db_config[:priority]
+      end
+
       def sp2db_import_strategy s=nil
         if s.present?
           s = s.to_sym

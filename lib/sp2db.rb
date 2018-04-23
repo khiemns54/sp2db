@@ -30,7 +30,7 @@ module Sp2db
 
   # return [Gclient]
   def client c=nil
-    @client ||= c || Client.new
+    Client.new
   end
 
   # Default sheet
