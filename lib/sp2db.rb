@@ -1,3 +1,4 @@
+require "google_drive"
 require "sp2db/logging"
 
 require "sp2db/config"
