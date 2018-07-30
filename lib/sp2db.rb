@@ -21,6 +21,7 @@ module Sp2db
   def config
     @config ||= Config.new
     yield @config if block_given?
+    Rails.application.eager_load!
     @config
   end
 
