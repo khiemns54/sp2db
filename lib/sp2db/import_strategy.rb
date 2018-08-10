@@ -76,7 +76,7 @@ module Sp2db
 
       def set_record_value record, row
         row.each do |k, v|
-          record.send("#{k}=", v)
+          record.send("#{k}=", v) if record.respond_to?("#{k}=")
         end
         record
       end
