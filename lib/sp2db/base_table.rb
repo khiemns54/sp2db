@@ -64,7 +64,15 @@ module Sp2db
 
     def sp_data
       retries = 2
-      raw_data = CSV.parse worksheet.export_as_string
+      begin
+        raw_data = CSV.parse worksheet.export_as_string
+      rescue Google::Apis::RateLimitError => e
+        retries -= 1
+        sleep(5)
+        retry if retries >= 0
+        raise e
+      end
+
       data = process_data raw_data, source: :sp
       data
     end
